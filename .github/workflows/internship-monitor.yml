@@ -304,7 +304,7 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "🚨 ${{ steps.analyze.outputs.new_count }} New Summer 2026 Internships!"
-          to: ss20355@nyu.edu
+          to: ${{ secrets.RECIPIENT_EMAIL }}
           from: Internship Monitor
           html_body: file://email_body.txt
           content_type: text/html
