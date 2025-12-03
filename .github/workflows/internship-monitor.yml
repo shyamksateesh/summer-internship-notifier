@@ -9,6 +9,7 @@ on:
 jobs:
   check-for-updates:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     
     steps:
       - name: Checkout monitoring repo
@@ -42,16 +43,20 @@ jobs:
           import sys
           from datetime import datetime
           
+          print("Starting analysis...")
+          
           # Read the previous and new README files
           try:
               with open('previous_readme.md', 'r', encoding='utf-8') as f:
                   previous_content = f.read()
+              print(f"Previous README loaded: {len(previous_content)} characters")
           except FileNotFoundError:
               print("First run - no previous data")
               previous_content = ""
           
           with open('new_readme.md', 'r', encoding='utf-8') as f:
               new_content = f.read()
+          print(f"New README loaded: {len(new_content)} characters")
           
           # Read commit info
           with open('latest_commit.json', 'r') as f:
@@ -60,54 +65,109 @@ jobs:
               commit_date = commit_data['commit']['author']['date']
               commit_sha = commit_data['sha'][:7]
           
-          def extract_section(content, section_title):
-              """Extract a specific section from the README"""
-              pattern = rf'## {re.escape(section_title)}.*?(?=##|\Z)'
-              match = re.search(pattern, content, re.DOTALL)
-              return match.group(0) if match else ""
+          print(f"Commit info: {commit_sha} - {commit_message}")
           
-          def parse_internships(section_content):
-              """Parse internship entries from a section"""
+          def extract_section(content, section_title):
+              """Extract a specific section from the README - FAST VERSION"""
+              print(f"Extracting section: {section_title}")
+              
+              # Find start of section
+              start_pattern = f'## {re.escape(section_title)}'
+              start_match = re.search(start_pattern, content)
+              if not start_match:
+                  print(f"  Section not found!")
+                  return ""
+              
+              start_pos = start_match.start()
+              
+              # Find next section (starts with ##)
+              next_section = re.search(r'\n## ', content[start_pos + len(start_pattern):])
+              if next_section:
+                  end_pos = start_pos + len(start_pattern) + next_section.start()
+              else:
+                  end_pos = len(content)
+              
+              section = content[start_pos:end_pos]
+              print(f"  Extracted {len(section)} characters")
+              return section
+          
+          def parse_internships_fast(section_content):
+              """Parse internship entries - OPTIMIZED VERSION"""
+              print("  Parsing internships...")
               internships = set()
-              # Match table rows with company, role, location, and application link
-              # Look for the Apply button link (not the Simplify link)
-              pattern = r'<tr>.*?<strong>.*?>(.*?)</a></strong>.*?<td>(.*?)</td>.*?<td>(.*?)</td>.*?<td>.*?href="(.*?)".*?Apply.*?</td>'
-              matches = re.finditer(pattern, section_content, re.DOTALL)
               
-              for match in matches:
-                  company = re.sub(r'<.*?>', '', match.group(1)).strip()
-                  role = re.sub(r'<.*?>', '', match.group(2)).strip()
-                  location = re.sub(r'<.*?>', '', match.group(3)).strip()
-                  location = re.sub(r'</br>', ', ', location)
-                  app_link = match.group(4).strip()
+              # Split into table rows first (much faster)
+              rows = section_content.split('<tr>')
+              print(f"  Found {len(rows)} rows")
+              
+              count = 0
+              for row in rows[1:]:  # Skip header row
+                  # Quick check if this is a main company row (not a ↳ continuation)
+                  if '↳' in row or '<strong>' not in row:
+                      continue
                   
-                  # Skip empty or malformed entries
-                  if company and role and not role.startswith('↳') and app_link:
-                      internships.add(f"{company}|{role}|{location}|{app_link}")
+                  try:
+                      # Extract company (between <strong> tags)
+                      company_match = re.search(r'<strong>.*?>(.*?)</a></strong>', row)
+                      if not company_match:
+                          continue
+                      company = re.sub(r'<.*?>', '', company_match.group(1)).strip()
+                      
+                      # Extract role (second <td>)
+                      role_match = re.search(r'</strong>.*?<td>(.*?)</td>', row)
+                      if not role_match:
+                          continue
+                      role = re.sub(r'<.*?>', '', role_match.group(1)).strip()
+                      
+                      # Extract location (third <td>)
+                      location_match = re.search(r'<td>.*?</td>.*?<td>(.*?)</td>', row)
+                      if not location_match:
+                          continue
+                      location = re.sub(r'<.*?>', '', location_match.group(1)).strip()
+                      location = location.replace('</br>', ', ')
+                      
+                      # Extract application link (look for first href before "Apply")
+                      link_match = re.search(r'href="([^"]+)"[^>]*>.*?Apply', row)
+                      app_link = link_match.group(1).strip() if link_match else ""
+                      
+                      if company and role:
+                          internships.add(f"{company}|{role}|{location}|{app_link}")
+                          count += 1
+                  except Exception as e:
+                      # Skip malformed rows silently
+                      continue
               
+              print(f"  Parsed {count} internships")
               return internships
           
           # Extract relevant sections
+          print("\n--- Extracting Software Engineering section ---")
           swe_section_old = extract_section(previous_content, "💻 Software Engineering Internship Roles")
           swe_section_new = extract_section(new_content, "💻 Software Engineering Internship Roles")
           
+          print("\n--- Extracting AI/ML/DS section ---")
           ai_section_old = extract_section(previous_content, "🤖 Data Science, AI & Machine Learning Internship Roles")
           ai_section_new = extract_section(new_content, "🤖 Data Science, AI & Machine Learning Internship Roles")
           
           # Parse internships
-          swe_internships_old = parse_internships(swe_section_old)
-          swe_internships_new = parse_internships(swe_section_new)
+          print("\n--- Parsing Software Engineering internships ---")
+          swe_internships_old = parse_internships_fast(swe_section_old)
+          swe_internships_new = parse_internships_fast(swe_section_new)
           
-          ai_internships_old = parse_internships(ai_section_old)
-          ai_internships_new = parse_internships(ai_section_new)
+          print("\n--- Parsing AI/ML/DS internships ---")
+          ai_internships_old = parse_internships_fast(ai_section_old)
+          ai_internships_new = parse_internships_fast(ai_section_new)
           
           # Find new internships
+          print("\n--- Finding new internships ---")
           new_swe = swe_internships_new - swe_internships_old
           new_ai = ai_internships_new - ai_internships_old
           
+          print(f"New SWE: {len(new_swe)}, New AI/ML/DS: {len(new_ai)}")
+          
           # Check if there are any new relevant internships
           if new_swe or new_ai:
-              print(f"Found {len(new_swe)} new SWE internships and {len(new_ai)} new AI/ML/DS internships")
+              print(f"\n✅ Found {len(new_swe)} new SWE internships and {len(new_ai)} new AI/ML/DS internships")
               
               # Format the email body
               email_body = f"🎉 New internship opportunities have been posted!\n\n"
@@ -120,7 +180,11 @@ jobs:
                   email_body += "=" * 70 + "\n\n"
                   for i, internship in enumerate(sorted(new_swe), 1):
                       parts = internship.split('|')
-                      company, role, location, app_link = parts[0], parts[1], parts[2], parts[3] if len(parts) == 4 else ""
+                      company = parts[0]
+                      role = parts[1]
+                      location = parts[2]
+                      app_link = parts[3] if len(parts) > 3 else ""
+                      
                       email_body += f"{i}. {company}\n"
                       email_body += f"   Role: {role}\n"
                       email_body += f"   Location: {location}\n"
@@ -133,7 +197,11 @@ jobs:
                   email_body += "=" * 70 + "\n\n"
                   for i, internship in enumerate(sorted(new_ai), 1):
                       parts = internship.split('|')
-                      company, role, location, app_link = parts[0], parts[1], parts[2], parts[3] if len(parts) == 4 else ""
+                      company = parts[0]
+                      role = parts[1]
+                      location = parts[2]
+                      app_link = parts[3] if len(parts) > 3 else ""
+                      
                       email_body += f"{i}. {company}\n"
                       email_body += f"   Role: {role}\n"
                       email_body += f"   Location: {location}\n"
@@ -155,9 +223,11 @@ jobs:
                   f.write(f'new_count={len(new_swe) + len(new_ai)}\n')
                   f.write(f'commit_date={commit_date}\n')
           else:
-              print("No new relevant internships found")
+              print("\n❌ No new relevant internships found")
               with open('$GITHUB_OUTPUT', 'a') as f:
                   f.write('changes_detected=false\n')
+          
+          print("\nAnalysis complete!")
           
           PYTHON_SCRIPT
       
