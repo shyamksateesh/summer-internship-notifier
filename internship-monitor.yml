@@ -1,0 +1,96 @@
+name: Internship Monitor
+
+on:
+  schedule:
+    # Runs every hour at minute 0
+    - cron: '0 * * * *'
+  workflow_dispatch: # Allows manual triggering for testing
+
+jobs:
+  check-for-updates:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout monitoring repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Fetch latest internship data
+        run: |
+          # Fetch the README from the internships repository
+          curl -H "Accept: application/vnd.github.v3.raw" \
+               https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/readme \
+               -o new_readme.md
+          
+          # Also fetch the last commit info for the README
+          curl -H "Accept: application/vnd.github.v3+json" \
+               https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/commits?path=README.md&per_page=1 \
+               -o latest_commit.json
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          # Create previous readme if it doesn't exist (first run)
+          if [ ! -f previous_readme.md ]; then
+            echo "First run - initializing"
+            cp new_readme.md previous_readme.md
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Compare the files
+          if ! diff -q previous_readme.md new_readme.md > /dev/null; then
+            echo "Changes detected!"
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+            
+            # Extract the latest commit message and date
+            COMMIT_MSG=$(cat latest_commit.json | grep -o '"message":"[^"]*"' | head -1 | cut -d'"' -f4)
+            COMMIT_DATE=$(cat latest_commit.json | grep -o '"date":"[^"]*"' | head -1 | cut -d'"' -f4)
+            
+            echo "commit_message=$COMMIT_MSG" >> $GITHUB_OUTPUT
+            echo "commit_date=$COMMIT_DATE" >> $GITHUB_OUTPUT
+            
+            # Generate a diff summary (first 50 lines of changes)
+            diff previous_readme.md new_readme.md | head -50 > changes.txt || true
+          else
+            echo "No changes detected"
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Send email notification
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚨 New Summer 2026 Internships Posted!"
+          to: ss20355@nyu.edu
+          from: Internship Monitor
+          body: |
+            New internship postings have been detected!
+            
+            Latest Commit: ${{ steps.check_changes.outputs.commit_message }}
+            Commit Date: ${{ steps.check_changes.outputs.commit_date }}
+            
+            View the full repository here:
+            https://github.com/SimplifyJobs/Summer2026-Internships
+            
+            Check out the latest README:
+            https://github.com/SimplifyJobs/Summer2026-Internships/blob/main/README.md
+            
+            ---
+            This is an automated notification from your GitHub Actions internship monitor.
+          
+      - name: Update stored README
+        if: steps.check_changes.outputs.changes_detected == 'true'
+        run: |
+          cp new_readme.md previous_readme.md
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add previous_readme.md
+          git commit -m "Update tracked README [skip ci]"
+          git push  
