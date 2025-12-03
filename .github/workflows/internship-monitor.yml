@@ -103,36 +103,48 @@ jobs:
               count = 0
               for row in rows[1:]:  # Skip header row
                   # Quick check if this is a main company row (not a ↳ continuation)
-                  if '↳' in row or '<strong>' not in row:
+                  if '↳' in row:
+                      continue
+                  
+                  # Must have <strong> tag (company name)
+                  if '<strong>' not in row:
                       continue
                   
                   try:
-                      # Extract company (between <strong> tags)
-                      company_match = re.search(r'<strong>.*?>(.*?)</a></strong>', row)
+                      # Split row into cells
+                      cells = row.split('</td>')
+                      if len(cells) < 4:
+                          continue
+                      
+                      # Cell 0: Company (inside <strong> tags)
+                      company_cell = cells[0]
+                      company_match = re.search(r'<strong><a[^>]*>(.*?)</a></strong>', company_cell)
                       if not company_match:
                           continue
-                      company = re.sub(r'<.*?>', '', company_match.group(1)).strip()
+                      company = company_match.group(1).strip()
                       
-                      # Extract role (second <td>)
-                      role_match = re.search(r'</strong>.*?<td>(.*?)</td>', row)
-                      if not role_match:
+                      # Cell 1: Role
+                      role_cell = cells[1]
+                      # Remove all HTML tags
+                      role = re.sub(r'<[^>]+>', '', role_cell).strip()
+                      if not role:
                           continue
-                      role = re.sub(r'<.*?>', '', role_match.group(1)).strip()
                       
-                      # Extract location (third <td>)
-                      location_match = re.search(r'<td>.*?</td>.*?<td>(.*?)</td>', row)
-                      if not location_match:
-                          continue
-                      location = re.sub(r'<.*?>', '', location_match.group(1)).strip()
-                      location = location.replace('</br>', ', ')
+                      # Cell 2: Location
+                      location_cell = cells[2]
+                      location = re.sub(r'<[^>]+>', ' ', location_cell).strip()
+                      location = ' '.join(location.split())  # Normalize whitespace
                       
-                      # Extract application link (look for first href before "Apply")
-                      link_match = re.search(r'href="([^"]+)"[^>]*>.*?Apply', row)
+                      # Cell 3: Application link
+                      app_cell = cells[3]
+                      link_match = re.search(r'href="([^"]+)"', app_cell)
                       app_link = link_match.group(1).strip() if link_match else ""
                       
                       if company and role:
                           internships.add(f"{company}|{role}|{location}|{app_link}")
                           count += 1
+                          if count <= 3:  # Debug: print first 3
+                              print(f"    Sample: {company} - {role}")
                   except Exception as e:
                       # Skip malformed rows silently
                       continue
