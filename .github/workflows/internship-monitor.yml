@@ -2,8 +2,8 @@ name: Internship Monitor
 
 on:
   schedule:
-    # Runs every hour at minute 0
-    - cron: '0 * * * *'
+    # Runs every 30 minutes
+    - cron: '*/30 * * * *'
   workflow_dispatch: # Allows manual triggering for testing
 
 jobs:
@@ -24,10 +24,10 @@ jobs:
       
       - name: Fetch latest internship data
         run: |
-          # Fetch the README from the internships repository
-          curl -H "Accept: application/vnd.github.v3.raw" \
+          # Fetch the FULL README directly from the raw GitHub content
+          curl -L \
                -o new_readme.md \
-               https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/readme
+               https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README.md
           
           # Fetch the last commit info for the README
           curl -H "Accept: application/vnd.github.v3+json" \
@@ -71,17 +71,19 @@ jobs:
               """Extract a specific section from the README - FAST VERSION"""
               print(f"Extracting section: {section_title}")
               
-              # Find start of section - be more flexible with spacing/encoding
-              # Try exact match first
-              start_pattern = f'## {re.escape(section_title)}'
-              start_match = re.search(start_pattern, content)
+              # Try multiple patterns to handle emoji encoding differences
+              patterns_to_try = [
+                  f'## {re.escape(section_title)}',  # Exact match
+                  f'## .*?{re.escape(section_title.split(maxsplit=1)[-1]) if " " in section_title else section_title}',  # Without emoji
+                  r'## 🤖 Data Science.*?Internship Roles',  # Specific for AI/ML section
+              ]
               
-              # If not found, try without emoji encoding differences
-              if not start_match and '🤖' in section_title:
-                  # Try with HTML entity or different encoding
-                  alt_title = section_title.replace('🤖', '🤖')  # normalized
-                  start_pattern = f'## .*?{re.escape(section_title.split(maxsplit=1)[1])}'
-                  start_match = re.search(start_pattern, content)
+              start_match = None
+              for pattern in patterns_to_try:
+                  start_match = re.search(pattern, content)
+                  if start_match:
+                      print(f"  Matched with pattern: {pattern[:50]}...")
+                      break
               
               if not start_match:
                   print(f"  Section not found!")
@@ -167,18 +169,9 @@ jobs:
           swe_section_new = extract_section(new_content, "💻 Software Engineering Internship Roles")
           
           print("\n--- Extracting AI/ML/DS section ---")
-          # Try multiple possible section titles
-          ai_section_old = extract_section(previous_content, "🤖 Data Science, AI & Machine Learning Internship Roles")
-          if not ai_section_old:
-              ai_section_old = extract_section(previous_content, "🤖 Data Science, AI and Machine Learning Internship Roles")
-          if not ai_section_old:
-              ai_section_old = extract_section(previous_content, "Data Science, AI & Machine Learning Internship Roles")
-          
-          ai_section_new = extract_section(new_content, "🤖 Data Science, AI & Machine Learning Internship Roles")
-          if not ai_section_new:
-              ai_section_new = extract_section(new_content, "🤖 Data Science, AI and Machine Learning Internship Roles")
-          if not ai_section_new:
-              ai_section_new = extract_section(new_content, "Data Science, AI & Machine Learning Internship Roles")
+          # Use a flexible pattern that will catch the AI/ML section regardless of exact formatting
+          ai_section_old = extract_section(previous_content, "Data Science, AI & Machine Learning Internship Roles")
+          ai_section_new = extract_section(new_content, "Data Science, AI & Machine Learning Internship Roles")
           
           # Parse internships
           print("\n--- Parsing Software Engineering internships ---")
