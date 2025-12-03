@@ -158,8 +158,18 @@ jobs:
           swe_section_new = extract_section(new_content, "💻 Software Engineering Internship Roles")
           
           print("\n--- Extracting AI/ML/DS section ---")
+          # Try multiple possible section titles
           ai_section_old = extract_section(previous_content, "🤖 Data Science, AI & Machine Learning Internship Roles")
+          if not ai_section_old:
+              ai_section_old = extract_section(previous_content, "🤖 Data Science, AI and Machine Learning Internship Roles")
+          if not ai_section_old:
+              ai_section_old = extract_section(previous_content, "Data Science, AI & Machine Learning Internship Roles")
+          
           ai_section_new = extract_section(new_content, "🤖 Data Science, AI & Machine Learning Internship Roles")
+          if not ai_section_new:
+              ai_section_new = extract_section(new_content, "🤖 Data Science, AI and Machine Learning Internship Roles")
+          if not ai_section_new:
+              ai_section_new = extract_section(new_content, "Data Science, AI & Machine Learning Internship Roles")
           
           # Parse internships
           print("\n--- Parsing Software Engineering internships ---")
@@ -230,13 +240,17 @@ jobs:
                   f.write(email_body)
               
               # Set output for GitHub Actions
-              with open('$GITHUB_OUTPUT', 'a') as f:
+              import os
+              github_output = os.getenv('GITHUB_OUTPUT')
+              with open(github_output, 'a') as f:
                   f.write('changes_detected=true\n')
                   f.write(f'new_count={len(new_swe) + len(new_ai)}\n')
                   f.write(f'commit_date={commit_date}\n')
           else:
               print("\n❌ No new relevant internships found")
-              with open('$GITHUB_OUTPUT', 'a') as f:
+              import os
+              github_output = os.getenv('GITHUB_OUTPUT')
+              with open(github_output, 'a') as f:
                   f.write('changes_detected=false\n')
           
           print("\nAnalysis complete!")
