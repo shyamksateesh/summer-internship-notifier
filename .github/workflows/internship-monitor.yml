@@ -201,42 +201,33 @@ jobs:
               print(f"\n✅ Found {len(new_swe)} new SWE internships and {len(new_ai)} new AI/ML/DS internships")
               
               # Format the email body as HTML
-              email_body = f"""<!DOCTYPE html>
-<html>
-<head>
-<style>
-body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
-.header {{ background-color: #4CAF50; color: white; padding: 20px; text-align: center; }}
-.content {{ padding: 20px; }}
-.section {{ margin-bottom: 30px; }}
-.job {{ background-color: #f9f9f9; border-left: 4px solid #4CAF50; padding: 15px; margin-bottom: 15px; }}
-.job-title {{ font-weight: bold; font-size: 18px; color: #2c3e50; }}
-.job-company {{ color: #16a085; font-size: 16px; }}
-.job-location {{ color: #7f8c8d; }}
-.apply-btn {{ display: inline-block; background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; margin-top: 8px; }}
-.apply-btn:hover {{ background-color: #45a049; }}
-.footer {{ background-color: #f1f1f1; padding: 15px; text-align: center; font-size: 14px; color: #666; }}
-.stats {{ background-color: #e8f5e9; padding: 10px; border-radius: 4px; margin: 15px 0; }}
-</style>
-</head>
-<body>
-<div class="header">
-<h1>🎉 New Internship Opportunities!</h1>
-</div>
-
-<div class="content">
-<div class="stats">
-<strong>📅 Last Updated:</strong> {commit_date}<br>
-<strong>💬 Latest Commit:</strong> {commit_message}<br>
-<strong>🔗 Commit SHA:</strong> {commit_sha}
-</div>
-"""
+              email_body = "<!DOCTYPE html>\n"
+              email_body += "<html>\n<head>\n<style>\n"
+              email_body += "body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n"
+              email_body += ".header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; }\n"
+              email_body += ".content { padding: 20px; }\n"
+              email_body += ".section { margin-bottom: 30px; }\n"
+              email_body += ".job { background-color: #f9f9f9; border-left: 4px solid #4CAF50; padding: 15px; margin-bottom: 15px; }\n"
+              email_body += ".job-title { font-weight: bold; font-size: 18px; color: #2c3e50; }\n"
+              email_body += ".job-company { color: #16a085; font-size: 16px; }\n"
+              email_body += ".job-location { color: #7f8c8d; }\n"
+              email_body += ".apply-btn { display: inline-block; background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px; margin-top: 8px; }\n"
+              email_body += ".apply-btn:hover { background-color: #45a049; }\n"
+              email_body += ".footer { background-color: #f1f1f1; padding: 15px; text-align: center; font-size: 14px; color: #666; }\n"
+              email_body += ".stats { background-color: #e8f5e9; padding: 10px; border-radius: 4px; margin: 15px 0; }\n"
+              email_body += "</style>\n</head>\n<body>\n"
+              email_body += '<div class="header">\n<h1>🎉 New Internship Opportunities!</h1>\n</div>\n\n'
+              email_body += '<div class="content">\n'
+              email_body += f'<div class="stats">\n'
+              email_body += f'<strong>📅 Last Updated:</strong> {commit_date}<br>\n'
+              email_body += f'<strong>💬 Latest Commit:</strong> {commit_message}<br>\n'
+              email_body += f'<strong>🔗 Commit SHA:</strong> {commit_sha}\n'
+              email_body += '</div>\n'
               
               if new_swe:
-                  email_body += f"""
-<div class="section">
-<h2>💻 NEW SOFTWARE ENGINEERING ROLES ({len(new_swe)})</h2>
-"""
+                  email_body += f'\n<div class="section">\n'
+                  email_body += f'<h2>💻 NEW SOFTWARE ENGINEERING ROLES ({len(new_swe)})</h2>\n'
+                  
                   for i, internship in enumerate(sorted(new_swe), 1):
                       parts = internship.split('|')
                       company = parts[0]
@@ -244,23 +235,20 @@ body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
                       location = parts[2]
                       app_link = parts[3] if len(parts) > 3 and parts[3] else ""
                       
-                      email_body += f"""
-<div class="job">
-<div class="job-company">{i}. {company}</div>
-<div class="job-title">{role}</div>
-<div class="job-location">📍 {location}</div>
-"""
+                      email_body += '<div class="job">\n'
+                      email_body += f'<div class="job-company">{i}. {company}</div>\n'
+                      email_body += f'<div class="job-title">{role}</div>\n'
+                      email_body += f'<div class="job-location">📍 {location}</div>\n'
                       if app_link:
-                          email_body += f'<a href="{app_link}" class="apply-btn">Apply Now</a>'
-                      email_body += "\n</div>\n"
+                          email_body += f'<a href="{app_link}" class="apply-btn">Apply Now</a>\n'
+                      email_body += '</div>\n'
                   
-                  email_body += "</div>"
+                  email_body += '</div>\n'
               
               if new_ai:
-                  email_body += f"""
-<div class="section">
-<h2>🤖 NEW AI/ML/DATA SCIENCE ROLES ({len(new_ai)})</h2>
-"""
+                  email_body += f'\n<div class="section">\n'
+                  email_body += f'<h2>🤖 NEW AI/ML/DATA SCIENCE ROLES ({len(new_ai)})</h2>\n'
+                  
                   for i, internship in enumerate(sorted(new_ai), 1):
                       parts = internship.split('|')
                       company = parts[0]
@@ -268,29 +256,22 @@ body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
                       location = parts[2]
                       app_link = parts[3] if len(parts) > 3 and parts[3] else ""
                       
-                      email_body += f"""
-<div class="job">
-<div class="job-company">{i}. {company}</div>
-<div class="job-title">{role}</div>
-<div class="job-location">📍 {location}</div>
-"""
+                      email_body += '<div class="job">\n'
+                      email_body += f'<div class="job-company">{i}. {company}</div>\n'
+                      email_body += f'<div class="job-title">{role}</div>\n'
+                      email_body += f'<div class="job-location">📍 {location}</div>\n'
                       if app_link:
-                          email_body += f'<a href="{app_link}" class="apply-btn">Apply Now</a>'
-                      email_body += "\n</div>\n"
+                          email_body += f'<a href="{app_link}" class="apply-btn">Apply Now</a>\n'
+                      email_body += '</div>\n'
                   
-                  email_body += "</div>"
+                  email_body += '</div>\n'
               
-              email_body += f"""
-</div>
-
-<div class="footer">
-<p><a href="https://github.com/SimplifyJobs/Summer2026-Internships">🔗 View Full Repository</a></p>
-<p>📊 Total SWE Roles: {len(swe_internships_new)} | Total AI/ML/DS Roles: {len(ai_internships_new)}</p>
-<p style="font-size: 12px; color: #999;">This is an automated notification from your GitHub Actions internship monitor.</p>
-</div>
-</body>
-</html>
-"""
+              email_body += '</div>\n\n'
+              email_body += '<div class="footer">\n'
+              email_body += '<p><a href="https://github.com/SimplifyJobs/Summer2026-Internships">🔗 View Full Repository</a></p>\n'
+              email_body += f'<p>📊 Total SWE Roles: {len(swe_internships_new)} | Total AI/ML/DS Roles: {len(ai_internships_new)}</p>\n'
+              email_body += '<p style="font-size: 12px; color: #999;">This is an automated notification from your GitHub Actions internship monitor.</p>\n'
+              email_body += '</div>\n</body>\n</html>\n'
               
               # Save email body to file
               with open('email_body.txt', 'w', encoding='utf-8') as f:
