@@ -62,9 +62,9 @@ jobs:
         if: steps.check_changes.outputs.changes_detected == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
-          server_address: smtp-mail.outlook.com
-          server_port: 587
-          secure: false
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "🚨 New Summer 2026 Internships Posted!"
