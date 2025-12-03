@@ -20,13 +20,13 @@ jobs:
         run: |
           # Fetch the README from the internships repository
           curl -H "Accept: application/vnd.github.v3.raw" \
-               https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/readme \
-               -o new_readme.md
+               -o new_readme.md \
+               https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/readme
           
           # Also fetch the last commit info for the README
           curl -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/commits?path=README.md&per_page=1 \
-               -o latest_commit.json
+               -o latest_commit.json \
+               https://api.github.com/repos/SimplifyJobs/Summer2026-Internships/commits?path=README.md&per_page=1
       
       - name: Check for changes
         id: check_changes
