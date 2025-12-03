@@ -112,27 +112,33 @@ jobs:
               print(f"  Found {len(rows)} rows")
               
               count = 0
+              current_company = ""  # Track the current company for ↳ rows
+              
               for row in rows[1:]:  # Skip header row
-                  # Quick check if this is a main company row (not a ↳ continuation)
-                  if '↳' in row:
-                      continue
-                  
-                  # Must have <strong> tag (company name)
-                  if '<strong>' not in row:
-                      continue
-                  
                   try:
                       # Split row into cells
                       cells = row.split('</td>')
                       if len(cells) < 4:
                           continue
                       
-                      # Cell 0: Company (inside <strong> tags)
+                      # Cell 0: Company (or ↳ for continuation)
                       company_cell = cells[0]
-                      company_match = re.search(r'<strong><a[^>]*>(.*?)</a></strong>', company_cell)
-                      if not company_match:
-                          continue
-                      company = company_match.group(1).strip()
+                      
+                      # Check if this is a continuation row (↳)
+                      is_continuation = '↳' in company_cell
+                      
+                      if not is_continuation:
+                          # This is a main company row
+                          company_match = re.search(r'<strong><a[^>]*>(.*?)</a></strong>', company_cell)
+                          if not company_match:
+                              continue
+                          current_company = company_match.group(1).strip()
+                          company = current_company
+                      else:
+                          # This is a continuation row - use the previous company
+                          if not current_company:
+                              continue  # Skip if we don't have a company yet
+                          company = current_company
                       
                       # Cell 1: Role
                       role_cell = cells[1]
@@ -154,7 +160,7 @@ jobs:
                       if company and role:
                           internships.add(f"{company}|{role}|{location}|{app_link}")
                           count += 1
-                          if count <= 3:  # Debug: print first 3
+                          if count <= 5:  # Debug: print first 5
                               print(f"    Sample: {company} - {role}")
                   except Exception as e:
                       # Skip malformed rows silently
