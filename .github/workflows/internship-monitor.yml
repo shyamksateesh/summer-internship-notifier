@@ -105,7 +105,7 @@ jobs:
           def parse_internships_fast(section_content):
               """Parse internship entries - OPTIMIZED VERSION"""
               print("  Parsing internships...")
-              internships = set()
+              internships = {}  # Use dict to store full info but compare by key
               
               # Split into table rows first (much faster)
               rows = section_content.split('<tr>')
@@ -158,7 +158,18 @@ jobs:
                       app_link = link_match.group(1).strip() if link_match else ""
                       
                       if company and role:
-                          internships.add(f"{company}|{role}|{location}|{app_link}")
+                          # Use company+role as unique key (ignore location and link changes)
+                          # Normalize role for comparison
+                          normalized_role = ' '.join(role.lower().split())
+                          key = f"{company.lower()}|||{normalized_role}"
+                          
+                          # Store full info as value
+                          internships[key] = {
+                              'company': company,
+                              'role': role,
+                              'location': location,
+                              'link': app_link
+                          }
                           count += 1
                           if count <= 5:  # Debug: print first 5
                               print(f"    Sample: {company} - {role}")
@@ -188,10 +199,14 @@ jobs:
           ai_internships_old = parse_internships_fast(ai_section_old)
           ai_internships_new = parse_internships_fast(ai_section_new)
           
-          # Find new internships
+          # Find new internships (compare keys only, not full entries)
           print("\n--- Finding new internships ---")
-          new_swe = swe_internships_new - swe_internships_old
-          new_ai = ai_internships_new - ai_internships_old
+          new_swe_keys = set(swe_internships_new.keys()) - set(swe_internships_old.keys())
+          new_ai_keys = set(ai_internships_new.keys()) - set(ai_internships_old.keys())
+          
+          # Get full info for new internships
+          new_swe = {key: swe_internships_new[key] for key in new_swe_keys}
+          new_ai = {key: ai_internships_new[key] for key in new_ai_keys}
           
           print(f"New SWE: {len(new_swe)}, New AI/ML/DS: {len(new_ai)}")
           
@@ -227,12 +242,11 @@ jobs:
                   email_body += f'\n<div class="section">\n'
                   email_body += f'<h2>💻 NEW SOFTWARE ENGINEERING ROLES ({len(new_swe)})</h2>\n'
                   
-                  for i, internship in enumerate(sorted(new_swe), 1):
-                      parts = internship.split('|')
-                      company = parts[0]
-                      role = parts[1]
-                      location = parts[2]
-                      app_link = parts[3] if len(parts) > 3 and parts[3] else ""
+                  for i, (key, info) in enumerate(sorted(new_swe.items(), key=lambda x: x[1]['company']), 1):
+                      company = info['company']
+                      role = info['role']
+                      location = info['location']
+                      app_link = info['link']
                       
                       email_body += '<div class="job">\n'
                       email_body += f'<div class="job-company">{i}. {company}</div>\n'
@@ -248,12 +262,11 @@ jobs:
                   email_body += f'\n<div class="section">\n'
                   email_body += f'<h2>🤖 NEW AI/ML/DATA SCIENCE ROLES ({len(new_ai)})</h2>\n'
                   
-                  for i, internship in enumerate(sorted(new_ai), 1):
-                      parts = internship.split('|')
-                      company = parts[0]
-                      role = parts[1]
-                      location = parts[2]
-                      app_link = parts[3] if len(parts) > 3 and parts[3] else ""
+                  for i, (key, info) in enumerate(sorted(new_ai.items(), key=lambda x: x[1]['company']), 1):
+                      company = info['company']
+                      role = info['role']
+                      location = info['location']
+                      app_link = info['link']
                       
                       email_body += '<div class="job">\n'
                       email_body += f'<div class="job-company">{i}. {company}</div>\n'
