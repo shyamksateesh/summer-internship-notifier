@@ -92,7 +92,9 @@ You need a Gmail account to send notifications from:
 |-------------|-------|---------|
 | `EMAIL_USERNAME` | Your Gmail address | `yourname@gmail.com` |
 | `EMAIL_PASSWORD` | Gmail App Password (no spaces) | `abcdefghijklmnop` |
-| `RECIPIENT_EMAIL` | Email where you want alerts | `your.email@school.edu` |
+| `RECIPIENT_EMAIL` | Email(s) where you want alerts | `your.email@school.edu` or `email1@school.edu, email2@gmail.com` |
+
+> 💡 **Tip:** You can add multiple recipient emails directly in the `RECIPIENT_EMAIL` secret by separating them with commas.
 
 ### Step 4: Enable GitHub Actions
 
@@ -167,6 +169,15 @@ https://raw.githubusercontent.com/SimplifyJobs/Summer2026-Internships/dev/README
 Change `dev` to `main` if you prefer the stable branch.
 
 ### Add More Recipients
+
+**Option 1: Via Secret (Recommended)**
+
+Update your `RECIPIENT_EMAIL` secret to include multiple emails:
+```
+email1@example.com, email2@example.com, email3@example.com
+```
+
+**Option 2: Directly in Workflow**
 
 Edit the workflow file and change:
 ```yaml
@@ -260,6 +271,8 @@ Open an issue in this repository or check the [Discussions](../../discussions) t
 ---
 
 <div align="center">
+
+**⭐ If this helped you land an internship, give it a star! ⭐**
 
 Made with ❤️ for students hunting internships
 
