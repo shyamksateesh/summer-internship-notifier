@@ -208,7 +208,20 @@ jobs:
           new_swe = {key: swe_internships_new[key] for key in new_swe_keys}
           new_ai = {key: ai_internships_new[key] for key in new_ai_keys}
           
-          print(f"New SWE: {len(new_swe)}, New AI/ML/DS: {len(new_ai)}")
+          # Filter out Canada-based internships
+          print("\n--- Filtering out Canada postings ---")
+          new_swe_filtered = {k: v for k, v in new_swe.items() if 'canada' not in v['location'].lower()}
+          new_ai_filtered = {k: v for k, v in new_ai.items() if 'canada' not in v['location'].lower()}
+          
+          canada_filtered_count = (len(new_swe) - len(new_swe_filtered)) + (len(new_ai) - len(new_ai_filtered))
+          if canada_filtered_count > 0:
+              print(f"  Filtered out {canada_filtered_count} Canada-based postings")
+          
+          # Use filtered results
+          new_swe = new_swe_filtered
+          new_ai = new_ai_filtered
+          
+          print(f"New SWE (US only): {len(new_swe)}, New AI/ML/DS (US only): {len(new_ai)}")
           
           # Check if there are any new relevant internships
           if new_swe or new_ai:
