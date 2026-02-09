@@ -208,14 +208,18 @@ jobs:
           new_swe = {key: swe_internships_new[key] for key in new_swe_keys}
           new_ai = {key: ai_internships_new[key] for key in new_ai_keys}
           
-          # Filter out Canada-based internships
-          print("\n--- Filtering out Canada postings ---")
-          new_swe_filtered = {k: v for k, v in new_swe.items() if 'canada' not in v['location'].lower()}
-          new_ai_filtered = {k: v for k, v in new_ai.items() if 'canada' not in v['location'].lower()}
+          # Filter out Canada and UK-based internships
+          print("\n--- Filtering out Canada and UK postings ---")
+          new_swe_filtered = {k: v for k, v in new_swe.items() 
+                              if 'canada' not in v['location'].lower() 
+                              and 'uk' not in v['location'].lower()}
+          new_ai_filtered = {k: v for k, v in new_ai.items() 
+                             if 'canada' not in v['location'].lower() 
+                             and 'uk' not in v['location'].lower()}
           
-          canada_filtered_count = (len(new_swe) - len(new_swe_filtered)) + (len(new_ai) - len(new_ai_filtered))
-          if canada_filtered_count > 0:
-              print(f"  Filtered out {canada_filtered_count} Canada-based postings")
+          filtered_count = (len(new_swe) - len(new_swe_filtered)) + (len(new_ai) - len(new_ai_filtered))
+          if filtered_count > 0:
+              print(f"  Filtered out {filtered_count} Canada/UK-based postings")
           
           # Use filtered results
           new_swe = new_swe_filtered
