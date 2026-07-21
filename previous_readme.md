@@ -7,13 +7,13 @@
 
 ---
 
-### Browse 295 Internship Roles by Category
+### Browse 301 Internship Roles by Category
 
-💻 **[Software Engineering](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README.md#-software-engineering-internship-roles)** (98)
+💻 **[Software Engineering](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README.md#-software-engineering-internship-roles)** (103)
 
 📱 **[Product Management](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README.md#-product-management-internship-roles)** (9)
 
-🤖 **[Data Science, AI & Machine Learning](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README.md#-data-science-ai--machine-learning-internship-roles)** (132)
+🤖 **[Data Science, AI & Machine Learning](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README.md#-data-science-ai--machine-learning-internship-roles)** (133)
 
 📈 **[Quantitative Finance](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README.md#-quantitative-finance-internship-roles)** (18)
 
@@ -204,6 +204,13 @@
 <td>12d</td>
 </tr>
 <tr>
+<td><strong><a href="https://simplify.jobs/c/National-Laboratory-Of-The-Rockies?utm_source=GHList&utm_medium=company">National Laboratory of the Rockies</a></strong></td>
+<td>Software and Data Infrastructure Intern</td>
+<td>Golden, CO</td>
+<td><div align="center"><a href="https://nrel.wd5.myworkdayjobs.com/NLR/job/Golden-CO/Undergraduate-graduate-intern---software-and-data-infrastructure-for-autonomous-thin-film-experimentation--Year-Round-_R14394?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/c1d1053c-438a-481e-8375-57149313ea2f?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
+<td>12d</td>
+</tr>
+<tr>
 <td><strong><a href="https://simplify.jobs/c/Citadel?utm_source=GHList&utm_medium=company">Citadel</a></strong></td>
 <td>Software Engineer Intern</td>
 <td><details><summary><strong>4 locations</strong></summary>Greenwich, CT<br>Houston, TX<br>Miami, FL<br>NYC</details></td>
@@ -281,6 +288,13 @@
 <td>20d</td>
 </tr>
 <tr>
+<td><strong><a href="https://simplify.jobs/c/Ribbon?utm_source=GHList&utm_medium=company">Ribbon</a></strong></td>
+<td>UI Engineer Co-op</td>
+<td>Ottawa, ON, Canada</td>
+<td><div align="center"><a href="https://vhr-genband.wd1.myworkdayjobs.com/ribboncareers/job/Canada-Ontario-Ottawa/Canada--Co-op-_REQ-2026-2965?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/97d542d1-34cd-4cd5-a7fc-6d841b5b0a28?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
+<td>21d</td>
+</tr>
+<tr>
 <td><strong><a href="https://simplify.jobs/c/Remarcable?utm_source=GHList&utm_medium=company">Remarcable</a></strong></td>
 <td>Full Stack Developer Co-op</td>
 <td>Vancouver, BC, Canada</td>
@@ -292,6 +306,13 @@
 <td>Technology Intern</td>
 <td>Alpharetta, GA</td>
 <td><div align="center"><a href="https://equifax.wd5.myworkdayjobs.com/UR_External/job/USA---Georgia---Alpharetta---30005/Technology-Intern_J00170964?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/6039a320-d48c-4651-98a5-3f0566350069?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
+<td>24d</td>
+</tr>
+<tr>
+<td><strong><a href="https://simplify.jobs/c/Copart?utm_source=GHList&utm_medium=company">Copart</a></strong></td>
+<td>Software Engineer Intern</td>
+<td>Dallas, TX</td>
+<td><div align="center"><a href="https://copart.wd12.myworkdayjobs.com/copart/job/Dallas-TX---Headquarters/Software-Engineering-Intern_JR109672?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/dc2f3a9e-bfd2-4ade-a19a-e77dfdcd2301?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
 <td>24d</td>
 </tr>
 <tr>
@@ -344,6 +365,13 @@
 <td>26d</td>
 </tr>
 <tr>
+<td><strong><a href="https://simplify.jobs/c/Copart?utm_source=GHList&utm_medium=company">Copart</a></strong></td>
+<td>Database Engineer Intern</td>
+<td>Dallas, TX</td>
+<td><div align="center"><a href="https://copart.wd12.myworkdayjobs.com/copart/job/Dallas-TX---Headquarters/Database-Engineering-Intern_JR109636?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/188c70e9-8a5c-445e-8bcf-9061fecdd0bb?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
+<td>26d</td>
+</tr>
+<tr>
 <td><strong><a href="https://simplify.jobs/c/Later?utm_source=GHList&utm_medium=company">Later</a></strong></td>
 <td>AI Automation Engineer Co-op</td>
 <td>Vancouver, BC, Canada</td>
@@ -390,6 +418,13 @@
 <td>Software Engineering Intern</td>
 <td>Norcross, GA</td>
 <td><div align="center"><a href="https://ebwg.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX/job/19500?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/eb155b8f-4890-4334-912c-10a8f422ed8e?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
+<td>1mo</td>
+</tr>
+<tr>
+<td><strong><a href="https://simplify.jobs/c/Copart?utm_source=GHList&utm_medium=company">Copart</a></strong></td>
+<td>Software Engineer Intern 🎓</td>
+<td>Dallas, TX</td>
+<td><div align="center"><a href="https://copart.wd12.myworkdayjobs.com/copart/job/Dallas-TX---Headquarters/Software-Engineering-Intern_JR109441?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/7e13e0d3-bd62-458e-869e-bb070af80106?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
 <td>1mo</td>
 </tr>
 <tr>
@@ -795,7 +830,7 @@
 </table>
 
 
-🔒 **[See 3077 more closed roles →](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README-Inactive.md#-software-engineering-internship-roles-inactive)**
+🔒 **[See 3072 more closed roles →](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README-Inactive.md#-software-engineering-internship-roles-inactive)**
 
 
 
@@ -1240,6 +1275,13 @@
 <td>Video Generation Content Understanding and Feedback Research Intern 🎓</td>
 <td>London, UK</td>
 <td><div align="center"><a href="https://tencent.wd1.myworkdayjobs.com/Tencent_Careers/job/UK-London/Video-Generation-Content-Understanding-and-Feedback-Research-Intern_R107680-1?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/cd98e851-308e-45b4-a479-fb0a0772898f?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
+<td>29d</td>
+</tr>
+<tr>
+<td>↳</td>
+<td>Video Generation Content Understanding and Feedback Research Intern 🎓</td>
+<td>London, UK</td>
+<td><div align="center"><a href="https://tencent.wd1.myworkdayjobs.com/OA_Huoshui_Platform/job/UK-London/Video-Generation-Content-Understanding-and-Feedback-Research-Intern_R107680?utm_source=Simplify&ref=Simplify"><img src="https://i.imgur.com/fbjwDvo.png" width="50" alt="Apply"></a> <a href="https://simplify.jobs/p/16adbd1f-0eba-4546-abbb-47028c0abca4?utm_source=GHList"><img src="https://i.imgur.com/aVnQdox.png" width="26" alt="Simplify"></a></div></td>
 <td>29d</td>
 </tr>
 <tr>
@@ -1834,7 +1876,7 @@
 </table>
 
 
-🔒 **[See 4398 more closed roles →](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README-Inactive.md#-data-science-ai--machine-learning-internship-roles-inactive)**
+🔒 **[See 4397 more closed roles →](https://github.com/SimplifyJobs/Summer2026-Internships/blob/dev/README-Inactive.md#-data-science-ai--machine-learning-internship-roles-inactive)**
 
 
 
